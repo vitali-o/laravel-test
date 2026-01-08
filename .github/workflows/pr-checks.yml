@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   checks:
-    runs-on: [home-local]
+    runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
