@@ -16,6 +16,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Diagnostics (runner + workspace)
+        run: |
+          set -euo pipefail
+          echo "runner.name=${{ runner.name }}"
+          echo "runner.os=${{ runner.os }}"
+          echo "runner.arch=${{ runner.arch }}"
+          echo "host=$(hostname -f || hostname)"
+          echo "pwd=$(pwd)"
+          echo "GITHUB_WORKSPACE=${GITHUB_WORKSPACE}"
+          echo "workspace listing:"
+          ls -la "${GITHUB_WORKSPACE}"
+
+          echo ""
+          echo "docker:"
+          docker version
+          echo ""
+          echo "docker compose:"
+          docker compose version
+
       - name: Set vars
         run: |
           echo "COMPOSE_PROJECT_NAME=pr-${{ github.event.pull_request.number }}-${{ github.run_id }}" >> $GITHUB_ENV
