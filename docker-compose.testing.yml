@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: .docker/testing/Dockerfile
     image: laravel-test-runner:php84
+    command: ["bash", "-lc", "sleep infinity"]
     restart: "no"
 
     user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
