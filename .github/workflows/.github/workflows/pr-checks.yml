@@ -40,6 +40,10 @@ jobs:
           echo "COMPOSE_PROJECT_NAME=pr-${{ github.event.pull_request.number }}-${{ github.run_id }}" >> $GITHUB_ENV
           echo "HOST_UID=$(id -u)" >> $GITHUB_ENV
           echo "HOST_GID=$(id -g)" >> $GITHUB_ENV
+          
+      - name: Show compose project name
+        run: |
+          echo "COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}"
 
       - name: Start testing stack
         run: |
