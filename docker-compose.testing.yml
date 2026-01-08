@@ -1,0 +1,64 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/testing/Dockerfile
+    image: laravel-test-runner:php84
+    restart: "no"
+
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    environment:
+      APP_ENV: testing
+      HOME: /tmp
+      COMPOSER_HOME: /tmp/composer
+
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+
+    depends_on:
+      pgsql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    networks:
+      - testing
+
+  pgsql:
+    image: postgres:17
+    restart: "no"
+    environment:
+      POSTGRES_DB: testing
+      POSTGRES_USER: pim-service
+      POSTGRES_PASSWORD: password
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "testing", "-U", "pim-service"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    volumes:
+      - pgsql-testing:/var/lib/postgresql/data
+    networks:
+      - testing
+
+  redis:
+    image: redis:8
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - redis-testing:/data
+    networks:
+      - testing
+
+networks:
+  testing:
+    driver: bridge
+
+volumes:
+  pgsql-testing:
+  redis-testing:
