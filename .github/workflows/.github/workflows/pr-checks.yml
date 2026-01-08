@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   checks:
-    runs-on: [self-hosted]
+    runs-on: [home-local]
     if: github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
